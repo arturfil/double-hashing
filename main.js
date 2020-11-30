@@ -77,14 +77,17 @@ const clearInputValues = () => {
 }
 
 const hashTableInsert = (j) => {
-	let i = 0 ;
 	let h = j%TABLE_SIZE ;
-	while ( getFromBucket(h) != "" ) {
-		colorBucketTouched(h) ;
-		h = (h+1)%TABLE_SIZE ;
-		i++ ;
-		if ( i>TABLE_SIZE ) break ;
-	}
+  if (getFromBucket(h) != "") {
+    colorBucketTouched(h)
+    h = secondHashTableInsert(j);
+  }
+
+	putToBucket(h,j) ;
+}
+
+const secondHashTableInsert = (j) => {
+  let h = 2 * (j % 4) + 1;
 	putToBucket(h,j) ;
 }
 
