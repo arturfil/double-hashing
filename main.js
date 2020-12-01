@@ -81,12 +81,10 @@ const clearInputValues = () => {
 // h2() = 2 * (key mod 4) + 1;
 // hk() = h1 + (i, h2) 
 
-// try [10,0,7,5,25,13,11,6]
+// try [10,0,4,12,6,42,94,65,122,64,76,89,91,37,58,57]
 const hashKey = (key) => {
   let round = 0;
   h = hashOne(key)
-  
-  console.log('Round: ', round);
 
   while (getFromBucket(h) != "") {
     round++;
@@ -94,22 +92,18 @@ const hashKey = (key) => {
     h = hashOne(round * hashTwo(key));
     colorBucketTouched(h);
     
-    if (round > 10) {
+    if (round > 200) {
       alert("Hash function got stuck");
       return;
     }
   }
-
   putToBucket(h,key);
 }
 
-const hashOne = (key) => {
-  return key % TABLE_SIZE;
-}
+const hashOne = (key) => key % TABLE_SIZE;
 
-const hashTwo = (key) => {
-  return 2 * (key % 4) + 1;
-}
+const hashTwo = (key) => 2 * (key % 4) + 1;
+
 
 const getInputValue = () => {
     let s = document.getElementById('hashin').value ;
