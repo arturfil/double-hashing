@@ -1,5 +1,5 @@
 
-const TABLE_SIZE = 10;
+const TABLE_SIZE = 16;
 
 const bucketcolor = [
 	'#ff8',
@@ -93,6 +93,7 @@ const hashKey = (key) => {
     console.log('Round: ', round);
     h = hashOne(round * hashTwo(key));
     colorBucketTouched(h);
+    
     if (round > 10) {
       alert("Hash function got stuck");
       return;
