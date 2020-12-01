@@ -1,5 +1,5 @@
 
-const TABLE_SIZE = 16 ;
+const TABLE_SIZE = 10;
 
 const bucketcolor = [
 	'#ff8',
@@ -76,33 +76,45 @@ const clearInputValues = () => {
 		putToBucket(i,"") ;
 }
 
-const hashTableInsert = (j) => {
-  let h = j%TABLE_SIZE ;
-  let i = 0;
-  while(getFromBucket(h) != "") {
-    colorBucketTouched(h)
-    h = secondHashTableInsert(j++);
+// the slot is determined by (H1 + i H2) mod 16
+// h1() = k mod table_size;
+// h2() = 2 * (key mod 4) + 1;
+// hk() = h1 + (i, h2) 
+
+// try [10,0,7,5,25,13,11,6]
+const hashKey = (key) => {
+  let round = 0;
+  h = hashOne(key)
+  
+  console.log('Round: ', round);
+
+  while (getFromBucket(h) != "") {
+    round++;
+    console.log('Round: ', round);
+    h = hashOne(round * hashTwo(key));
+    colorBucketTouched(h);
+    if (round > 10) {
+      alert("Hash function got stuck");
+      return;
+    }
   }
 
-  // if (getFromBucket(h) != "") {
-  //   colorBucketTouched(h)
-  //   h = secondHashTableInsert(j);
-  // }
-
-	putToBucket(h,j) ;
+  putToBucket(h,key);
 }
 
-const secondHashTableInsert = (j) => {
-  let h = 2 * (j % 4) + 1;
-	putToBucket(h,j) ;
+const hashOne = (key) => {
+  return key % TABLE_SIZE;
 }
 
+const hashTwo = (key) => {
+  return 2 * (key % 4) + 1;
+}
 
 const getInputValue = () => {
     let s = document.getElementById('hashin').value ;
 	let j = parseInt(s) ;
 	makeBucketsBlack() ;
 	if ( !isNaN(j) ) 
-		hashTableInsert(j) ;
+		hashKey(j) ;
 	document.getElementById('hashin').value="" ;
 }
